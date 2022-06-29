@@ -1,0 +1,17 @@
+---
+title: "index.Rmd"
+author: "Amisha Jain"
+date: '2022-06-29'
+output: html_document
+---
+
+This tutorial is called Mapping and the source is Census Bureau Data.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(tidycensus)
+library(ggthemes)
+library(tigris)
+```
+
