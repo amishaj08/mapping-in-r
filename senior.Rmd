@@ -1,0 +1,37 @@
+---
+title: "senior.Rmd"
+author: "Amisha Jain"
+date: '2022-06-30'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(tidycensus)
+library(ggthemes)
+library(tigris)
+```
+
+```{r}
+glimpse(pums_variables)
+nw_pums <- mutate(nw_states = c("OR", "WA", "ID")) |> 
+  get_pums(AGEP, PUMA, variable = c("B02001_001", "B02001_008"), 
+          state = nw_states, year = 2018, geography = "tract", 
+        recode = TRUE, survey = "acs1") |> 
+  group_by(ST, PUMA) |> summarize(total_pop = PWGTP/pct_Senior)
+
+nw_pumas <- map(nw_states, tigris::pumas, class="sf", cb=TRUE) |> reduce(rbind)
+
+nw_final <- left_join(nw_pumas, nw_Senior) |> 
+  map("STATEFP10" = "ST", "PUMACE10" = "PUMA")
+```
+
+```{r}
+nw_final |> ggplot(aes(fill = pct_Senior)) + geom_sf() + 
+  scale_fill_viridis_b(name = NULL, labels = scales::label_percent(1), 
+              option = "magma") +
+  theme_void() + labs(title = "Percent of People that are seniors", 
+                  caption = "Source: American Community Survey 2014-2018")
+```
+
