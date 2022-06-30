@@ -1,0 +1,32 @@
+---
+title: "Two Races"
+author: "Amisha Jain"
+date: '2022-06-30'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(tidycensus)
+library(ggthemes)
+library(tigris)
+```
+
+```{r}
+continental <- state.name[! state.name %in% c("Alaska", "Hawaii")]
+  
+races <- get_acs(variable = c("B02001_001", "B02001_008"), 
+          state = continental, year = 2018, geography = "tract", 
+          summary_var = "B02001_001")
+```
+
+```{r}
+races |> mutate((Percent = estimate/summary_est)*100) |> 
+  ggplot(aes(fill = "Percent")) + geom_sf(size = .003) +
+  scale_fill_viridis_c(option = "inferno", direction = -1) + 
+  theme_void() + labs(title = "Percent of People in Two or More Races", 
+                  caption = "Source: Aermican Community Survey 2014-2018")
+```
+
+

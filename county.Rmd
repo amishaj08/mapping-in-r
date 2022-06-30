@@ -20,13 +20,13 @@ racevars <- load_variables(2018, "acs5") |> filter(concept == "RACE")
 ```{r}
 get_acs(geography = "tract", summary_var = "B02001_001", 
         year = 2018, variables = c("P001001", "P002005"), 
-        geometry = TRUE, state = "Texas", county = "Harris") |> 
-  percent((Percent = estimate/summary_est)*100) |> 
+        geometry = TRUE, state = "Texas", county = "Harris County") |> 
+  mutate((Percent = estimate/summary_est)*100) |> 
   ggplot(aes(fill = Percent, color = Percent)) + 
   facet_wrap(~variable) + scale_fill_viridis_c(direction = -1) + 
   scale_color_viridis_c(direction = -1) + theme_void() + 
   labs(title = "Racial geography of Harris Count. Texas", 
-       caption = "Source: Aermican Community Survey 2014-2018")
+       caption = "Source: American Community Survey 2014-2018")
 ```
 
 
