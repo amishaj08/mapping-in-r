@@ -1,7 +1,6 @@
 ---
-title: "index.Rmd"
+title: "Mapping Tutorial"
 author: "Amisha Jain"
-date: '2022-06-29'
 output: html_document
 ---
 

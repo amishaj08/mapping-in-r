@@ -1,0 +1,48 @@
+---
+title: "Rural"
+author: "Amisha Jain"
+output: html_document
+---
+
+This is a tutorial called Mapping.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(tidycensus)
+library(ggthemes)
+library(tigris)
+```
+
+```{r}
+rural <- get_decennial(geography = "State",
+              variables = c("P001001", "P002005"), 
+              year = 2010, output = "wide")
+```
+
+```{r}
+rural |> 
+  ggplot(aes(x = GEOID, y = NAME)) + geom_sf()
+```
+
+```{r}
+rural |>
+  filter("Alaska", "Hawaii", "Puerto Rico") |> 
+  scale_fill_viridis_c(options = "plasma", direction = -1) |> 
+  ggplot(aes(x = GEOID, y = NAME, fill = (P001001/ P002005)*100)) + 
+  geom_sf() + theme_void() + 
+  labs(title = "Rural Geography of the United States", 
+       caption = "Source: Census 2010")
+```
+
+```{r}
+rural_shifted |> 
+  ggplot(aes(x = GEOID, y = NAME, fill = (P001001/ P002005)*100)) +
+scale_fill_viridis_c(options = "plasma", direction = -1) + 
+  geom_sf() + theme_void() + 
+  labs(title = "Rural Geography of the United States", 
+      caption = "Source: Census 2010") + 
+  shift_geometry()
+```
+
+
