@@ -1,0 +1,41 @@
+---
+title: "deserts.Rmd"
+author: "Amisha Jain"
+date: '2022-06-30'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(tidycensus)
+library(ggthemes)
+library(jsonlite)
+```
+
+```{r}
+json_url <- "https://services1.arcgis.com/RLQu0rK7h4kbsBq5/arcgis/rest/services/Store_Locations/FeatureServer/0/query?where=1%3D1&outFields=Store_Name,City,State,County,Longitude,Latitude&outSR=4326&f=json"
+
+county_stores <- fromJSON(json_url)
+```
+
+```{r}
+county_stores <- county_stores$features$attributes
+county_map <- get_acs(geography = "tract", summary_var = "B02001_001", 
+        year = 2018, variables = "B06012_002", 
+        geometry = TRUE, state = "Illinois", county = "Cook County") |> 
+  mutate((Percent = estimate/summary_est)*100)
+```
+
+```{r}
+county_map |> ggplot(aes(fill = Percent, color = Percent)) +
+  geom_sf() + scale_fill_viridis_c(direction = -1) +
+  scale_color_viridis_c(direction = -1) + 
+  geom_point(aes(x = longitude, y = latitude), 
+             data = county_stores, inherit.aes = FALSE, size = .5) +
+  theme_void() + labs(title = "Grocery stores and Income in Cook County",
+    subtitle = "Cook County has a small food desert in the South.",
+  caption = "AP Retailer Locator, US Department of Agriculture Food")
+```
+
+

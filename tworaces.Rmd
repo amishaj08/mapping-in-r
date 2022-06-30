@@ -26,7 +26,7 @@ races |> mutate((Percent = estimate/summary_est)*100) |>
   ggplot(aes(fill = "Percent")) + geom_sf(size = .003) +
   scale_fill_viridis_c(option = "inferno", direction = -1) + 
   theme_void() + labs(title = "Percent of People in Two or More Races", 
-                  caption = "Source: Aermican Community Survey 2014-2018")
+                  caption = "Source: American Community Survey 2014-2018")
 ```
 
 
